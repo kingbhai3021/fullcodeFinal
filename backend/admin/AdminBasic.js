@@ -15,6 +15,7 @@ export const AdminLogin = async (req, res) => {
             const token = jwt.sign({ username: username }, process.env.SECRET_KEY_ADMIN, { expiresIn: "1d" });
             res.cookie("token", token, { httpOnly: true, secure: false, maxAge: 3600000 });
             res.status(200).json({ message: "Login successful" });
+            
         }else{
             res.status(401).json({ message: "Invalid credentials" })
         }

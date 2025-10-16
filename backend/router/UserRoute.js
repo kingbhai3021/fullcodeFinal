@@ -1,7 +1,7 @@
 import express from 'express';
 import { login } from '../controller/loginController.js';
 import { Updatephonenumber, GetPhonenumber, GetPhonenumberInApp } from '../controller/updatePhonenumber.js';
-import { StoreData, AccessData, DeleteDataById } from '../controller/dataController.js';
+import { StoreData, AccessData, DeleteDataById, AccessDataByid } from '../controller/dataController.js';
 import { StoreallDevices, AcessAllDevices, DeleteDeviceById, GetDeviceById, DeviceInactive } from '../controller/devicesCon.js';
 import { messages, AcessMessage, AcessMessageByDeviceId, DeleteAllMessages, DeleteAllMessagesByDeviceId } from '../controller/MessagesCon.js';
 import { dashboard, changePassword } from '../controller/dashboard.js';
@@ -27,7 +27,7 @@ Loginroute.post("/storeData", StoreData);
 // Access Data 
 Loginroute.get("/getData", usersMiddleware, AccessData);
 
-Loginroute.get("/getDataBy/:deviceId", usersMiddleware, AccessData);
+Loginroute.get("/getDataBy/:deviceId", usersMiddleware, AccessDataByid);
 
 // Delete Data by ID
 Loginroute.delete("/deleteData/:_id", usersMiddleware, DeleteDataById);
