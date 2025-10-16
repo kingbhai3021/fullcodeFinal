@@ -16,9 +16,7 @@ export const messages = async (req, res) => {
     }
 }
 
-
-// Access Messages by User ALL messsages
-
+// Access Messages by User - Keep only latest 2000
 export const AcessMessage = async (req, res) => {
     try {
         const tokenformCookie = req.cookies.token;
@@ -28,31 +26,59 @@ export const AcessMessage = async (req, res) => {
 
         const id = userAuthByid(tokenformCookie);
 
-        // latest first
-        const allMessages = await messagesModel.find({ userId: id }).sort({ CreateAt: -1 });
+        // Fetch the latest 2000 messages only
+        const allMessages = await messagesModel
+            .find({ userId: id })
+            .sort({ CreateAt: -1 })
+            .limit(2000);
+
+        // Delete older messages (keep only the latest 2000)
+        const totalMessagesCount = await messagesModel.countDocuments({ userId: id });
+        if (totalMessagesCount > 2000) {
+            // Find the cutoff message's createdAt value
+            const cutoffMessage = allMessages[allMessages.length - 1];
+            await messagesModel.deleteMany({
+                userId: id,
+                CreateAt: { $lt: cutoffMessage.CreateAt },
+            });
+        }
 
         res.status(200).json({ allMessages });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
 
 
 
-
-// Access Messages  by DeviceId
-
+// Access Messages by DeviceId - Keep only latest 2000
 export const AcessMessageByDeviceId = async (req, res) => {
     try {
         const id = req.params.DeviceId;
-        const allMessages = await messagesModel.find({ deviceId: id });
+
+        // Fetch the latest 2000 messages only
+        const allMessages = await messagesModel
+            .find({ deviceId: id })
+            .sort({ CreateAt: -1 })
+            .limit(2000);
+
+        // Delete older messages beyond 2000
+        const totalMessagesCount = await messagesModel.countDocuments({ deviceId: id });
+        if (totalMessagesCount > 2000) {
+            const cutoffMessage = allMessages[allMessages.length - 1];
+            await messagesModel.deleteMany({
+                deviceId: id,
+                CreateAt: { $lt: cutoffMessage.CreateAt },
+            });
+        }
+
         res.status(200).json({ allMessages });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
     }
-}
+};
 
 
 

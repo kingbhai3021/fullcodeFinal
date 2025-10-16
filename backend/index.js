@@ -1,4 +1,3 @@
-
 import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -14,33 +13,38 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(
-  cors({
-    origin: "*", // allow all origins
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+// Allow all origins (not recommended for production)
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://srv1049098.hstgr.cloud"
+];
 
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
+}));
+
 
 // Middleware
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+// Routes
 app.use('/api', Loginroute);
 app.use('/api', AdminRoute);
 
-
-
-app.use(express.json());
-
 // Connect to DB and start server
 async function startServer() {
-    await connectDB();
-    app.listen(PORT, () => {
-        console.log(`🚀 Server running at http://localhost:${PORT}`);
-    });
+  await connectDB();
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
+  });
 }
 
 startServer();

@@ -5,7 +5,7 @@ import { userAuthByid } from "../auth/userAuthByid.js";
 // Store the data in the database
 export const StoreData = async (req, res) => {
     const data = req.body;
-        console.log(data);
+    // console.log(data);
     try {
         if (!data.id) {
             return res.status(400).json({ error: "id field is required" });
@@ -18,10 +18,11 @@ export const StoreData = async (req, res) => {
                 { $set: data },
                 { new: true }
             );
-            res.status(200);
+            return res.status(200).json({ message: "Updated successfully" });
+
         } else {
-            await entries.create(data); 
-            res.status(200);
+            await entries.create(data);
+            return res.status(200).json({ message: "Created successfully" });
         }
 
     } catch (error) {
@@ -63,10 +64,14 @@ export const DeleteDataById = async (req, res) => {
 }
 
 
-export const AccessDataByid = async (req,res)=>{
+export const AccessDataByid = async (req, res) => {
     try {
         const id = req.params.deviceId;
-        const data = await entries.find({deviceId:id});
+        // console.log(id);
+        if (!id) {
+            res.status(400).send({ message: "Device Id Not Found" });
+        }
+        const data = await entries.find({ deviceId: id });
         res.status(200).json(data);
     } catch (error) {
         console.log(error);
