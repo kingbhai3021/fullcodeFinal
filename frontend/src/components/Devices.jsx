@@ -33,25 +33,17 @@ export default function Devices() {
 
   return (
     <AdminNavigation>
-      <div className="relative h-[calc(100vh-5rem)] md:h-[calc(100vh-2rem)] max-w-6xl mx-auto px-2 py-4">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3 mb-6">
-          <div className="flex items-center gap-3">
-            <div className="bg-purple-100 text-purple-600 rounded-full p-2">
+      <div class="max-w-6xl mx-auto px-2">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3 mb-6">
+          <div class="flex items-center gap-3">
+            <div class="bg-purple-100 text-purple-600 rounded-full p-2">
               <Smartphone size={28} />
             </div>
-            <h2 className="text-2xl font-bold text-white">Devices</h2>
-          </div>
-          <div className="flex-1 flex justify-end items-center gap-2 mt-2 sm:mt-0">
-            <input
-              type="text"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Search devices..."
-              className="w-full sm:w-64 px-4 py-2 rounded-xl border border-white focus:ring-2 focus:ring-green-400 focus:outline-none shadow-sm text-sm bg-white"
-            />
+            <h2 class="text-2xl font-bold text-white">Devices</h2>
           </div>
         </div>
-        <div className="overflow-y-auto h-full pb-4 pr-1" style={{ maxHeight: 'calc(100vh - 10rem)' }}>
+        <div class="overflow-y-auto h-full pb-4 pr-1">
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {loading ? (
               <div className="col-span-full text-center py-12 text-gray-400 text-lg">Loading devices...</div>

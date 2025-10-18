@@ -206,25 +206,18 @@ export default function Messages() {
                 )}
 
                 {/* Header + Search */}
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3 mb-6">
-                    <div className="flex items-center gap-3">
-                        <div className="bg-blue-100 text-blue-600 rounded-full p-2">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-blue-100 text-blue-600 rounded-full p-2">
                             <MessageSquare size={28} />
                         </div>
-                        <h2 className="text-2xl font-bold text-white">Messages</h2>
+                        <h2 class="text-2xl font-bold text-white">Messages</h2>
                     </div>
-                    <div className="flex-1 flex justify-end items-center gap-2 mt-2 sm:mt-0">
-                        <input
-                            type="text"
-                            value={search}
-                            onChange={e => setSearch(e.target.value)}
-                            placeholder="Search messages..."
-                            className="w-full sm:w-64 px-4 py-2 rounded-xl border border-white focus:ring-2 focus:ring-blue-400 focus:outline-none shadow-sm text-sm bg-white"
-                        />
+                    <div class="flex-1 flex justify-end items-center gap-2 mt-2 sm:mt-0">
                         <button
                             title="Delete all messages"
                             onClick={handleDeleteAll}
-                            className="ml-2 p-2 rounded-full bg-red-100 hover:bg-red-200 text-red-600 shadow transition disabled:opacity-50"
+                            class="ml-2 p-2 rounded-full bg-red-100 hover:bg-red-200 text-red-600 shadow transition disabled:opacity-50"
                             disabled={loading || messages.length === 0}
                         >
                             <Trash2 size={18} />
