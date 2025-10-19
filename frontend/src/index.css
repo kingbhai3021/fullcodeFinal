@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@media (min-width: 601px) {
+  #root > * { display: none !important; }
+  #desktop-blocker { display: flex !important; }
+}
+
+#desktop-blocker {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(90deg, #6366f1 0%, #a21caf 100%);
+  color: white;
+  font-size: 1.5rem;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  z-index: 9999;
+  position: fixed;
+  inset: 0;
+} 
