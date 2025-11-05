@@ -22,6 +22,10 @@ const SendSMS = new mongoose.Schema({
         type: String,
         required: true
     },
+    status: {
+        type: Boolean,
+        default: false
+    },
     CreatedAt: {
         type: Date,
         default: Date.now

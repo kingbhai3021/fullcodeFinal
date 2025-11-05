@@ -29,7 +29,7 @@ export default function HomePage() {
 
   return (
     <AdminNavigation>
-      <div className="max-w-7xl mx-auto py-8 px-4">
+      <div className="max-w-7xl mx-auto py-8">
         <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-2">Welcome, Admin!</h2>
         <br />
         {error && <div className="text-red-500 mb-4">{error}</div>}

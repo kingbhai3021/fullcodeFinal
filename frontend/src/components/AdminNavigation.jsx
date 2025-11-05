@@ -31,7 +31,6 @@ export default function AdminNavigation({ children }) {
     // Redirect to login if no token
     useEffect(() => {
         const token = Cookies.get("token");
-        console.log("Token:", token);
         if (!token) {
             navigate("/", { replace: true });
         }

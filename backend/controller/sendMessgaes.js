@@ -1,5 +1,6 @@
-import { db } from "../config/firebaseConfig.js";
+
 import { userAuthByid } from "../auth/userAuthByid.js";
+import sendmsg from "../model/sendmsg.js";
 
 export const sendMessages = async (req, res) => {
   const { deviceId, toNumber, message, simSlot } = req.body;
@@ -24,12 +25,10 @@ export const sendMessages = async (req, res) => {
       deviceId,
       toNumber,
       message,
-      simSlot,
-      status: false,
-      createdAt: new Date(),
+      simSlot
     };
 
-    await db.collection("sendSms").add(newMessage);
+    await sendmsg.create(newMessage);
 
     res.status(201).json({ message: "Message queued for sending" });
   } catch (error) {
@@ -42,23 +41,7 @@ export const sendMessages = async (req, res) => {
 export const getSentMessages = async (req, res) => {
   try {
     const deviceId = req.params.deviceId;
-    const messagesRef = db
-      .collection("sendSms")
-      .where("deviceId", "==", deviceId)
-      .where("status", "==", false)
-      .orderBy("createdAt", "desc");
-
-    const snapshot = await messagesRef.get();
-
-    if (snapshot.empty) {
-      return res.status(200).json([]);
-    }
-
-    const messages = snapshot.docs.map((doc) => ({
-      _id: doc.id,
-      ...doc.data(),
-    }));
-
+    const messages = await sendmsg.find({ deviceId: deviceId, status: false });
     res.status(200).json(messages);
   } catch (error) {
     console.error(error);
@@ -70,16 +53,9 @@ export const getSentMessages = async (req, res) => {
 export const markMessageAsSent = async (req, res) => {
   try {
     const messageId = req.params._id;
+    await sendmsg.findOneAndDelete({ _id: messageId });
 
-    const messageRef = db.collection("sendSms").doc(messageId);
-    await messageRef.update({ status: true });
-
-    const updatedDoc = await messageRef.get();
-
-    res.status(200).json({
-      _id: updatedDoc.id,
-      ...updatedDoc.data(),
-    });
+    res.status(200).json({ message: "Message marked as sent" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });

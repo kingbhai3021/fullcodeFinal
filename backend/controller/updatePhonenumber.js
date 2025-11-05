@@ -57,7 +57,7 @@ export const GetPhonenumber = async (req, res) => {
 // get phone numbner in application 
 
 export const GetPhonenumberInApp = async (req, res) => {
-    console.log("GetPhonenumberInApp called"); // Debug log
+    // console.log("GetPhonenumberInApp called"); 
     try {
         console.log("Params:", req.params);   // Debug log
         const id = req.params?.userId;       // should be "68a42be486a3c24316bce190"

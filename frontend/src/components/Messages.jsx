@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import AdminNavigation from "./AdminNavigation";
 import axios from "axios";
-import { MessageSquare, Trash2, Send, User2 } from "lucide-react";
+import { MessageSquare, Trash2, Send, User2, Eye} from "lucide-react";
 import API_URL from "../apiConfig";
 
 export default function Messages() {
@@ -16,7 +16,7 @@ export default function Messages() {
     const { deviceId } = useParams();
 
     const [device, setDevice] = useState(null);
-    const [fromNumber, setFromNumber] = useState("");
+    const [fromNumber, setFromNumber] = useState(""); // This state doesn't seem to be used, but we'll leave it
     const [simSlot, setSimSlot] = useState("");
     const [smsMessage, setSmsMessage] = useState("");
     const [sending, setSending] = useState(false);
@@ -118,6 +118,40 @@ export default function Messages() {
         );
     });
 
+    // --- HELPER FUNCTION TO HIGHLIGHT SEARCH TERM ---
+    const highlightText = (text, highlight) => {
+        // If no highlight, or text isn't a string, return original text
+        if (!highlight.trim() || typeof text !== 'string') {
+            return text;
+        }
+
+        // Escape regex special characters in the highlight string
+        const escapedHighlight = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+        // Create regex with capturing group and case-insensitive flag
+        const regex = new RegExp(`(${escapedHighlight})`, 'gi');
+
+        // Split the text by the regex. The capturing group ensures matches are kept in the array.
+        const parts = text.split(regex);
+
+        return (
+            <> {/* Use React Fragment to avoid unnecessary wrapper elements */}
+                {parts.map((part, index) =>
+                    // Check if the part matches the highlight (case-insensitive)
+                    part.toLowerCase() === highlight.toLowerCase() ? (
+                        <mark key={index} className="bg-yellow-300 text-black px-0.5 rounded-sm">
+                            {part}
+                        </mark>
+                    ) : (
+                        // Otherwise, return the part as plain text
+                        part
+                    )
+                )}
+            </>
+        );
+    };
+    // --- END HELPER FUNCTION ---
+
     return (
         <AdminNavigation>
             <div className="relative h-[calc(100vh-5rem)] md:h-[calc(100vh-2rem)] max-w-6xl mx-auto flex flex-col">
@@ -127,7 +161,7 @@ export default function Messages() {
                     <form
                         onSubmit={handleSendSMS}
                         className="p-4 rounded-2xl shadow-lg bg-gradient-to-br from-white/90 via-indigo-50 to-pink-50 border border-indigo-100 flex flex-col gap-4 mb-4"
-                        style={{ maxWidth: 480, margin: "0 auto" }}
+                        style={{ maxWidth: 480 }}
                     >
                         {/* To Number */}
                         <div className="flex flex-col">
@@ -179,17 +213,16 @@ export default function Messages() {
                                     required
                                 >
                                     <option value="">Select</option>
-                                    {device?.slot1Number && (
-                                        <option value="1">
-                                            SIM 1{device.slot1Number ? ` (${device.slot1Number})` : ""}
-                                        </option>
-                                    )}
-                                    {device?.slot2Number && (
-                                        <option value="2">
-                                            SIM 2{device.slot2Number ? ` (${device.slot2Number})` : ""}
-                                        </option>
-                                    )}
+
+                                    <option value="1">
+                                        SIM 1{device?.slot1Number ? ` (${device.slot1Number})` : ""}
+                                    </option>
+
+                                    <option value="2">
+                                        SIM 2{device?.slot2Number ? ` (${device.slot2Number})` : ""}
+                                    </option>
                                 </select>
+
                             </div>
 
                             {/* Send Button */}
@@ -233,8 +266,8 @@ export default function Messages() {
                 </div>
 
                 {/* Messages List */}
-                <div className="overflow-y-auto flex-grow pb-4 pr-1 custom-scrollbar">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div className="overflow-y-auto flex-grow pb-4 pr-1 scroll-smooth">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                         {loading ? (
                             <div className="col-span-full text-center py-12 text-gray-400 text-lg">Loading messages...</div>
                         ) : error ? (
@@ -245,24 +278,41 @@ export default function Messages() {
                             filteredMessages.map((msg, idx) => (
                                 <div
                                     key={msg._id || idx}
-                                    className="rounded-2xl shadow-lg p-4 bg-gradient-to-br from-white/90 via-indigo-50 to-pink-50 border border-indigo-100 hover:scale-[1.02] transition-transform"
+                                    className="rounded-2xl shadow-lg p-4 bg-gradient-to-br from-white/90 via-indigo-50 to-pink-50 border border-indigo-100"
                                 >
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <span className="text-xs font-bold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded mr-2">#{filteredMessages.length - idx}</span>
-                                        <span className="text-xs font-bold text-indigo-600">{msg.deviceId}</span>
+                                    <div className="flex items-center gap-1 mb-2">
+                                        <span className="text-xs font-bold text-indigo-600 bg-indigo-100 px-2 py-0.5 rounded mr-2">#{msg.msgcount}</span>
+                                        {/* --- MODIFIED --- */}
+                                        <a
+                                            href={`/messages/${msg.deviceId}`}
+                                        >
+                                            <span className="flex items-center gap-1 text-xs font-bold text-indigo-600 m-auto">
+                                                {/* <User2 size={15} className="text-pink-500" /> */}
+                                                <Eye size={15} className="text-gray-500 cursor-pointer hover:text-indigo-600" />
+                                                <span>{highlightText(msg.deviceId, search)}</span>
+                                            </span>
+                                        </a>
+
                                         <span className="ml-auto text-xs text-gray-400 text-right">
                                             {msg.CreateAt ? `${new Date(msg.CreateAt).toLocaleDateString()} ${new Date(msg.CreateAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}` : ""}
                                         </span>
                                     </div>
+                                    {/* --- MODIFIED --- */}
                                     <div className="text-sm text-gray-700 mb-1 break-words">
-                                        <span className="font-semibold text-pink-600">From:</span> {msg.sender}
+                                        <span className="font-semibold text-pink-600">From:</span> {highlightText(msg.sender, search)}
                                     </div>
-                                    <div className="text-xs text-black mb-2 break-words max-h-20 overflow-y-auto custom-scrollbar">
-                                        {msg.message}
+                                    {/* --- MODIFIED --- */}
+                                    <div className="text-xs text-black mb-2 break-words">
+                                        {highlightText(msg.message, search)}
                                     </div>
                                     <div className="flex flex-wrap gap-2 text-xs text-gray-500">
-                                        <span className="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">SIM: {msg.sim_number}</span>
-                                        <span className="bg-pink-100 text-pink-700 px-2 py-0.5 rounded">Slot: {msg.sim_slot}</span>
+                                        {/* --- MODIFIED --- */}
+                                        <span className="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">
+                                            SIM: {highlightText(msg.sim_number, search)}
+                                        </span>
+                                        <span className="bg-pink-100 text-pink-700 px-2 py-0.5 rounded">
+                                            Slot: {msg.sim_slot}
+                                        </span>
                                     </div>
                                 </div>
                             ))

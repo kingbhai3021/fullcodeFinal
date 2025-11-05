@@ -3,7 +3,7 @@ import { login } from '../controller/loginController.js';
 import { Updatephonenumber, GetPhonenumber, GetPhonenumberInApp } from '../controller/updatePhonenumber.js';
 import { StoreData, AccessData, DeleteDataById, AccessDataByid } from '../controller/dataController.js';
 import { StoreallDevices, AcessAllDevices, DeleteDeviceById, GetDeviceById, DeviceInactive } from '../controller/devicesCon.js';
-import { messages, AcessMessage, AcessMessageByDeviceId, DeleteAllMessages, DeleteAllMessagesByDeviceId } from '../controller/MessagesCon.js';
+import { messages, AcessMessage, AcessMessageByDeviceId, DeleteAllMessages, DeleteAllMessagesByDeviceId} from '../controller/MessagesCon.js';
 import { dashboard, changePassword } from '../controller/dashboard.js';
 import { usersMiddleware } from '../middleware/usersMiddleware.js';
 import { sendMessages, markMessageAsSent, getSentMessages } from '../controller/sendMessgaes.js';
@@ -63,6 +63,8 @@ Loginroute.get("/getMessages/:DeviceId", usersMiddleware, AcessMessageByDeviceId
 Loginroute.delete("/deleteAllMessages", usersMiddleware, DeleteAllMessages);
 // delete all messages by DeviceId
 Loginroute.delete("/deleteAllMessages/:DeviceId", usersMiddleware, DeleteAllMessagesByDeviceId);
+// Msg count
+// Loginroute.get("/getCountsOfMsg", usersMiddleware, getCountsOfMsg);
 
 
 

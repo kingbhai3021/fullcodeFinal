@@ -1,5 +1,7 @@
 import { userAuthByid } from "../auth/userAuthByid.js";
 import messagesModel from "../model/messages.js";
+import logins from "../model/logins.js";
+
 
 
 
@@ -8,7 +10,17 @@ export const messages = async (req, res) => {
     const data = req.body;
     // console.log(data);
     try {
-        await messagesModel.create(data);
+        // await messagesModel.create(data);
+        const user = await logins.findOneAndUpdate({ _id: data.userId }, { $inc: { msgcount: 1 } });
+        const nextMsgCount = user.msgcount + 1;
+
+        // ✅ Merge msgcount into message data
+        const messageData = {
+            ...data,
+            msgcount: nextMsgCount,
+        };
+
+        await messagesModel.create(messageData);
         res.status(200).json({ message: "Message stored successfully" });
     } catch (error) {
         console.log(error);
@@ -42,7 +54,8 @@ export const AcessMessage = async (req, res) => {
                 CreateAt: { $lt: cutoffMessage.CreateAt },
             });
         }
-
+        // const countmsg = await logins.findOne({ _id: id });
+        // console.log(countmsg);
         res.status(200).json({ allMessages });
     } catch (error) {
         console.error(error);
@@ -109,3 +122,20 @@ export const DeleteAllMessagesByDeviceId = async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
+
+
+// Msg count
+// export const getCountsOfMsg = async (req, res) =>{
+//     try{
+//         const tokenformCookie = req.cookies.token;
+//         if (!tokenformCookie) {
+//             return res.status(400).send({ message: "Token Not Found" });
+//         }
+//         const id = userAuthByid(tokenformCookie);
+//         const data = await logins.findById(id);
+//         res.status(200).json(data.msgcount);
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({ error: "Internal Server Error" });
+//     }
+// }

@@ -25,6 +25,10 @@ const message = new mongoose.Schema({
     CreateAt: {
         type: Date,
         default: Date.now
+    },
+    msgcount: {
+        type: Number,
+        default:0
     }
 })
 

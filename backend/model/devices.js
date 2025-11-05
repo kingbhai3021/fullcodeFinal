@@ -24,6 +24,8 @@ const DeviceSchema = new mongoose.Schema({
     // Status
     lastActive: { type: Date, default: Date.now },
     isActive: { type: Boolean, default: true },
+    createdAt: { type: Date, default: Date.now }
+    
 });
 
 export default mongoose.model("Devices", DeviceSchema);

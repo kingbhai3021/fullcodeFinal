@@ -13,6 +13,10 @@ const loginSchema = new mongoose.Schema({
         type: String,
         default: "user"
     },
+    msgcount: {
+        type: Number,
+        default: 0
+    },
     ValidUpto: {
         type: Date,
         required: true
@@ -33,6 +37,6 @@ const loginSchema = new mongoose.Schema({
     }
 })
 
-loginSchema.index({ ValidUpto: 1 }, { expireAfterSeconds: 0 });
+ 
 
 export default mongoose.model("login", loginSchema);

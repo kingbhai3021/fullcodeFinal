@@ -53,7 +53,7 @@ export default function ChangeNumber() {
 
   return (
     <AdminNavigation>
-      <div className="flex-col items-center justify-center min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-2rem)] px-4">
+      <div className="flex-col items-center justify-center min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-2rem)]">
         <div className="relative max-w-md w-full mt-12 overflow-hidden">
           {/* Card Glow/Lighting Effect */}
           <div className="absolute -inset-1 bg-gradient-to-br from-pink-400/40 via-purple-400/30 to-indigo-400/40 blur-2xl opacity-80 animate-pulse z-0" />
