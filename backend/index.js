@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 // Allow all origins (not recommended for production)
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://srv1049098.hstgr.cloud"
+  "HERE_YOUR_WEB_APP_URL"
 ];
 
 app.use(cors({
